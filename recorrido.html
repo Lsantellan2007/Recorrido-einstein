@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recorrido de Einstein en Montevideo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; }
+        h1 { text-align: center; color: #ffffff; background-color: #2c3e50; padding: 15px; border-radius: 10px; font-family: 'Georgia', serif; }
+        #map { height: 500px; width: 100%; margin-top: 20px; border: 2px solid #333; border-radius: 10px; }
+        .number-label {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 8px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Recorrido de Einstein en Montevideo</h1>
+    
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-34.9011, -56.1645], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        
+        var locations = [
+            { lat: -34.9055, lng: -56.1860, number: "1", title: "Llegada de Einstein - 18 de Julio", description: "Einstein llegó a Montevideo a bordo del Vapor de la Carrera y fue recibido por autoridades y ciudadanos. Se hospedó en la casa de Nahum Rosemblat en la avenida 18 de Julio." },
+            { lat: -34.8836, lng: -56.1872, number: "2", title: "Universidad de la República", description: "Visitó el Prado y una escuela pública. A las 17:30, dio su primera conferencia en la Universidad de la República ante más de 2,000 personas." },
+            { lat: -34.8894, lng: -56.1663, number: "3", title: "Conferencia de prensa", description: "Por la mañana, ofreció una rueda de prensa en su alojamiento." },
+            { lat: -34.8806, lng: -56.1806, number: "4", title: "Senado y segunda conferencia", description: "Por la mañana, visitó una fábrica de materiales de construcción y luego fue homenajeado en el Senado. A las 15:00, se reunió con el presidente José Serrato. A las 17:30, dictó su segunda conferencia en la Universidad." },
+            { lat: -34.8910, lng: -56.1645, number: "5", title: "Hotel del Prado", description: "La comunidad judía le ofreció un banquete en el Hotel del Prado." },
+            { lat: -34.9072, lng: -56.1911, number: "6", title: "Última conferencia", description: "Visitó la Facultad de Ingeniería y dio su tercera y última conferencia en la Universidad." },
+            { lat: -34.9033, lng: -56.1882, number: "7", title: "Parque Hotel", description: "La Universidad de la República le otorgó el título de Profesor 'Honoris Causa'. Por la noche, asistió a un banquete en el Parque Hotel." },
+            { lat: -34.9025, lng: -56.1900, number: "8", title: "Plaza de los Treinta y Tres", description: "Antes de partir, se reunió con el filósofo Carlos Vaz Ferreira en la Plaza de los Treinta y Tres. A las 08:00, zarpó rumbo a Río de Janeiro a bordo del Valdivia." }
+        ];
+        
+        var latlngs = locations.map(loc => [loc.lat, loc.lng]);
+        var polyline = L.polyline(latlngs, {color: '#d35400', weight: 6, opacity: 0.9}).addTo(map);
+        
+        locations.forEach(function(location) {
+            var marker = L.marker([location.lat, location.lng]).addTo(map)
+                .bindPopup(`<b>${location.title}</b><br>${location.description}`);
+            
+            var label = L.divIcon({
+                className: 'number-label',
+                html: `<div>${location.number}</div>`
+            });
+            
+            L.marker([location.lat, location.lng], { icon: label }).addTo(map);
+        });
+        
+        map.fitBounds(polyline.getBounds());
+    </script>
+</body>
+</html>
